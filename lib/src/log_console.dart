@@ -63,7 +63,8 @@ class _LogConsoleState extends State<LogConsole> {
 
     _scrollController.addListener(() {
       if (!_scrollListenerEnabled) return;
-      var scrolledToBottom = _scrollController.offset >= _scrollController.position.maxScrollExtent;
+      var scrolledToBottom = _scrollController.offset >=
+          _scrollController.position.maxScrollExtent;
       setState(() {
         _followBottom = scrolledToBottom;
       });
@@ -132,7 +133,7 @@ class _LogConsoleState extends State<LogConsole> {
           opacity: _followBottom ? 0 : 1,
           duration: Duration(milliseconds: 150),
           child: Padding(
-            padding: EdgeInsets.only(bottom: 60),
+            padding: EdgeInsets.only(bottom: 100),
             child: FloatingActionButton(
               mini: true,
               clipBehavior: Clip.antiAlias,
@@ -175,6 +176,7 @@ class _LogConsoleState extends State<LogConsole> {
 
   Widget _buildTopBar() {
     return LogBar(
+      height: 50,
       dark: widget.dark,
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -217,55 +219,71 @@ class _LogConsoleState extends State<LogConsole> {
 
   Widget _buildBottomBar() {
     return LogBar(
+      height: 100,
       dark: widget.dark,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Expanded(
-            child: TextField(
-              style: TextStyle(fontSize: 20),
-              controller: _filterController,
-              onChanged: (s) => _refreshFilter(),
-              decoration: InputDecoration(
-                labelText: "Filter log output",
-                border: OutlineInputBorder(),
-              ),
+      child: Column(
+        children: [
+          Flexible(
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    style: TextStyle(fontSize: 20),
+                    controller: _filterController,
+                    onChanged: (s) => _refreshFilter(),
+                    decoration: InputDecoration(
+                      labelText: "Filter log output",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 20),
+                DropdownButton<Level>(
+                  value: _filterLevel,
+                  items: [
+                    DropdownMenuItem(
+                      child: Text("VERBOSE"),
+                      value: Level.verbose,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("DEBUG"),
+                      value: Level.debug,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("INFO"),
+                      value: Level.info,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("WARNING"),
+                      value: Level.warning,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("ERROR"),
+                      value: Level.error,
+                    ),
+                    DropdownMenuItem(
+                      child: Text("WTF"),
+                      value: Level.wtf,
+                    )
+                  ],
+                  onChanged: (value) {
+                    _filterLevel = value!;
+                    _refreshFilter();
+                  },
+                )
+              ],
             ),
           ),
-          SizedBox(width: 20),
-          DropdownButton<Level>(
-            value: _filterLevel,
-            items: [
-              DropdownMenuItem(
-                child: Text("VERBOSE"),
-                value: Level.verbose,
-              ),
-              DropdownMenuItem(
-                child: Text("DEBUG"),
-                value: Level.debug,
-              ),
-              DropdownMenuItem(
-                child: Text("INFO"),
-                value: Level.info,
-              ),
-              DropdownMenuItem(
-                child: Text("WARNING"),
-                value: Level.warning,
-              ),
-              DropdownMenuItem(
-                child: Text("ERROR"),
-                value: Level.error,
-              ),
-              DropdownMenuItem(
-                child: Text("WTF"),
-                value: Level.wtf,
-              )
-            ],
-            onChanged: (value) {
-              _filterLevel = value!;
-              _refreshFilter();
+          ElevatedButton(
+            child: Text("Copy all to clipboard"),
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(
+                  text: _renderedBuffer
+                      .map((element) => element.span.toPlainText())
+                      .join('\n')));
             },
-          )
+          ),
         ],
       ),
     );
@@ -304,13 +322,14 @@ class _LogConsoleState extends State<LogConsole> {
 class LogBar extends StatelessWidget {
   final bool dark;
   final Widget child;
+  final double height;
 
-  LogBar({required this.dark, required this.child});
+  LogBar({required this.dark, required this.child, required this.height});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: height,
       child: Container(
         decoration: BoxDecoration(
           boxShadow: [
