@@ -30,6 +30,10 @@ class LogConsole extends StatefulWidget {
     _outputEventBuffer.add(outputEvent);
   }
 
+  static ListQueue<OutputEvent> getLogs() {
+    return _outputEventBuffer;
+  }
+
   @override
   _LogConsoleState createState() => _LogConsoleState();
 }
@@ -110,11 +114,11 @@ class _LogConsoleState extends State<LogConsole> {
       theme: widget.dark
           ? ThemeData(
               brightness: Brightness.dark,
-              accentColor: Colors.blueGrey,
+              colorScheme: ColorScheme.light(secondary: Colors.blueGrey),
             )
           : ThemeData(
               brightness: Brightness.light,
-              accentColor: Colors.lightBlueAccent,
+              colorScheme: ColorScheme.light(secondary: Colors.blueGrey),
             ),
       home: Scaffold(
         body: SafeArea(
