@@ -1,15 +1,13 @@
 name: logger_flutter
 description: Flutter extension for logger. Please go there for documentation.
-version: 1.1.0+4
-author: Calvin Lee <lwd369@gmail.com>
+version: 1.1.0+6
 homepage: https://github.com/lwd369/logger_flutter
 
 environment:
-  sdk: ">=2.13.0 <3.0.0"
+  sdk: ">=2.19.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  logger: ">=1.0.0"
-  sensors_plus: ^1.0.1
+  logger: "^1.4.0"

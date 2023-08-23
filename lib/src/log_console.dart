@@ -113,11 +113,9 @@ class _LogConsoleState extends State<LogConsole> {
       debugShowCheckedModeBanner: false,
       theme: widget.dark
           ? ThemeData(
-              brightness: Brightness.dark,
-              colorScheme: ColorScheme.light(secondary: Colors.blueGrey),
+              colorScheme: ColorScheme.dark(secondary: Colors.blueGrey),
             )
           : ThemeData(
-              brightness: Brightness.light,
               colorScheme: ColorScheme.light(secondary: Colors.blueGrey),
             ),
       home: Scaffold(
